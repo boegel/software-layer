@@ -1,0 +1,43 @@
+# documentation: https://help.github.com/en/articles/workflow-syntax-for-github-actions
+name: Tests for build script and easystack files
+on: [push, pull_request]
+jobs:
+  build:
+    runs-on: ubuntu-18.04
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: set up Python
+      uses: actions/setup-python@v1
+      with:
+        python-version: ${{matrix.python}}
+        architecture: x64
+
+    - name: install Python packages
+      run: |
+        pip install easybuild
+
+    - name: install Lmod modules tool
+      run: |
+          # install_eb_dep.sh script comes with EasyBuild
+          source install_eb_dep.sh Lmod-8.4.31 $HOME
+
+          # changes in environment are not passed to other steps, so need to create files...
+          echo $MOD_INIT > mod_init
+          echo $PATH > path
+          if [ ! -z $MODULESHOME ]; then echo $MODULESHOME > moduleshome; fi
+
+    - name: test whether build script and easystack file are in sync
+      run: |
+          EESSI_PILOT_VERSION=$(grep 'export EESSI_PILOT_VERSION=' EESSI-pilot-install-software.sh | sed 's/.*="\(.*\)"/\1/g')
+          # make sure easystack file is found
+          test -f eessi-${EESSI_PILOT_VERSION}.yml
+          # collect list of easyconfig files covered by easystack file
+          export PATH=$(cat $HOME/path)
+          source $(cat $HOME/mod_init); type module
+          eb --easystack eessi-${EESSI_PILOT_VERSION}.yml --experimental -D | tee eessi-${EESSI_PILOT_VERSION}.list
+          # check whether each easyconfig installed by build script is covered by easystack file
+          for ec in $(grep '\.eb' EESSI-pilot-install-software.sh | sed 's/.*[ "=]\([^ ]*\.eb\).*/\1/g'); do
+              echo "Checking for ${ec} in eessi-${EESSI_PILOT_VERSION}.list..."
+              grep ${ec} eessi-${EESSI_PILOT_VERSION}.list
+          done
