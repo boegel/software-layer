@@ -11,6 +11,14 @@ software:
         versions:
           2020.1:
             versionsuffix: -Python-3.8.2
+          2020.4:
+            versionsuffix: -Python-3.8.2
+  Horovod:
+    toolchains:
+      foss-2020a:
+        versions:
+          0.21.3:
+            versionsuffix: -TensorFlow-2.3.1-Python-3.8.2
   OpenFOAM:
     toolchains:
       foss-2020a:
@@ -19,6 +27,10 @@ software:
      toolchains:
        gompi-2020a:
          versions: [5.6.3]
+  QuantumESPRESSO:
+     toolchains:
+       foss-2020a:
+         versions: ['6.6']
   TensorFlow:
     toolchains:
       foss-2020a:
