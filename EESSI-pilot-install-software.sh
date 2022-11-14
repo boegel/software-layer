@@ -352,6 +352,13 @@ check_exit_code $? "${ok_msg}" "${fail_msg}"
 
 ### add packages here
 
+export CaDiCaL_EC="CaDiCaL-1.3.0-GCC-9.3.0.eb"
+echo ">> Installing ${CaDiCaL_EC}..."
+ok_msg="${CaDiCaL_EC} installed, let's solve some problems!"
+fail_msg="Installation of ${CaDiCaL_EC} failed, that's a pity..."
+$EB ${CaDiCaL_EC} --robot
+check_exit_code $? "${ok_msg}" "${fail_msg}"
+
 echo ">> Creating/updating Lmod cache..."
 export LMOD_RC="${EASYBUILD_INSTALLPATH}/.lmod/lmodrc.lua"
 if [ ! -f $LMOD_RC ]; then
