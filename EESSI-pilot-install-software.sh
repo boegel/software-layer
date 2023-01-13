@@ -410,6 +410,17 @@ fi
 $EB SciPy-bundle-2021.05-foss-2021a.eb --robot
 check_exit_code $? "${ok_msg}" "${fail_msg}"
 
+# we should use the most recent EasyBuild version to look for missing modules,
+# so also install EasyBuild v4.7.0
+echo ">> Installing EasyBuild 4.7.0..."
+ok_msg="EasyBuild v4.7.0 installed"
+fail_msg="EasyBuild v4.7.0 failed to install"
+$EB --from-pr 17065 --include-easyblocks-from-pr 2805
+check_exit_code $? "${ok_msg}" "${fail_msg}"
+
+LMOD_IGNORE_CACHE=1 module swap EasyBuild/4.7.0
+check_exit_code $? "Swapped to EasyBuild/4.7.0" "Couldn't swap to EasyBuild/4.7.0"
+
 ### add packages here
 
 echo ">> Creating/updating Lmod cache..."
