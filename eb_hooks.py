@@ -197,6 +197,18 @@ def pre_configure_hook(self, *args, **kwargs):
         PRE_CONFIGURE_HOOKS[self.name](self, *args, **kwargs)
 
 
+def pre_configure_hook_openblas_optarch_generic(self, *args, **kwargs):
+    """
+    Pre-configure hook for OpenBLAS: add DYNAMIC_ARCH=1 to build/test/install options when using --optarch=GENERIC
+    """
+    if self.name == 'OpenBLAS':
+        if build_option('optarch') == OPTARCH_GENERIC:
+            for step in ('build', 'test', 'install'):
+                self.cfg.update(f'{step}opts', "DYNAMIC_ARCH=1")
+    else:
+        raise EasyBuildError("OpenBLAS-specific hook triggered for non-OpenBLAS easyconfig?!")
+
+
 def pre_configure_hook_libfabric_disable_psm3_x86_64_generic(self, *args, **kwargs):
     """Add --disable-psm3 to libfabric configure options when building with --optarch=GENERIC on x86_64."""
     if self.name == 'libfabric':
@@ -253,5 +265,6 @@ POST_PREPARE_HOOKS = {
 PRE_CONFIGURE_HOOKS = {
     'libfabric': pre_configure_hook_libfabric_disable_psm3_x86_64_generic,
     'MetaBAT': pre_configure_hook_metabat_filtered_zlib_dep,
+    'OpenBLAS': pre_configure_hook_openblas_optarch_generic,
     'WRF': pre_configure_hook_wrf_aarch64,
 }
