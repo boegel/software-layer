@@ -385,7 +385,7 @@ fi
 
 $TOPDIR/update_lmod_cache.sh ${EPREFIX} ${EASYBUILD_INSTALLPATH}
 
-$TOPDIR/check_missing_installations.sh
+$TOPDIR/check_missing_installations.sh $TOPDIR/eessi-2021.12.yml
 
 echo ">> Cleaning up ${TMPDIR}..."
 rm -r ${TMPDIR}
