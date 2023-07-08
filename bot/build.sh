@@ -56,6 +56,12 @@ echo "bot/build.sh: LOCAL_TMP='${LOCAL_TMP}'"
 # check if path to copy build logs to is specified, so we can copy build logs for failing builds there
 BUILD_LOGS_DIR=$(cfg_get_value "site_config" "build_logs_dir")
 echo "bot/build.sh: BUILD_LOGS_DIR='${BUILD_LOGS_DIR}'"
+# if $BUILD_LOGS_DIR is set, add it to $SINGULARITY_BIND so the path is available in the build container
+if [[ -z ${SINGULARITY_BIND} ]]; then
+    export SINGULARITY_BIND="${BUILD_LOGS_DIR}"
+else
+    export SINGULARITY_BIND="${SINGULARITY_BIND},${BUILD_LOGS_DIR}"
+fi
 
 SINGULARITY_CACHEDIR=$(cfg_get_value "site_config" "container_cachedir")
 echo "bot/build.sh: SINGULARITY_CACHEDIR='${SINGULARITY_CACHEDIR}'"
