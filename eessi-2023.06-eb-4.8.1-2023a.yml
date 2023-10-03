@@ -8,3 +8,4 @@ easyconfigs:
       options:
         from-pr: 18887
   - foss-2023a
+  - Bowtie2-2.5.1-GCC-12.3.0
