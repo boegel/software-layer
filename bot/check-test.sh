@@ -13,10 +13,10 @@ else
     status="FAILURE"
 fi
 
-echo "[RESULT]" > ${job_result_file}
-echo -n "comment_description = " >> ${job_result_file}
-echo "all checks pass for test phase" >> ${job_result_file}
-echo "status = ${status}" >> ${job_result_file}
+echo "[RESULT]" > ${job_test_result_file}
+echo -n "comment_description = " >> ${job_test_result_file}
+echo "all checks pass for test phase" >> ${job_test_result_file}
+echo "status = ${status}" >> ${job_test_result_file}
 
 test "${status}" == "SUCCESS"
 exit $?
