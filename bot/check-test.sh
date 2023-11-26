@@ -4,7 +4,7 @@ job_dir=${PWD}
 job_out="slurm-${SLURM_JOB_ID}.out"
 job_test_result_file=_bot_job${SLURM_JOB_ID}.test
 
-grep_out=$(grep '^All checks PASSED' ${job_dir}/${job_out})
+grep_out=$(grep "^All checks for test phase PASSED" ${job_dir}/${job_out})
 all_checks_passed=$?
 
 if [[ ${all_checks_passed} -eq 0 ]]; then
