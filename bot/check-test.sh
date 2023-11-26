@@ -15,7 +15,7 @@ else
     status="FAILURE"
 fi
 
-echo "[RESULT]" > ${job_test_result_file}
+echo "[TEST]" > ${job_test_result_file}
 echo -n "comment_description = " >> ${job_test_result_file}
 echo "${comment_description}" >> ${job_test_result_file}
 echo "status = ${status}" >> ${job_test_result_file}
