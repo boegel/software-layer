@@ -32,15 +32,26 @@ jobs:
               cvmfs_repositories: software.eessi.io
 
         - name: Test check_missing_installations.sh script
+          env:
+            EASYBUILD_GITHUB_USER: 'ci'
+            PYTHON_KEYRING_BACKEND: 'keyrings.alt.file.PlaintextKeyring'
           run: |
               export EESSI_SOFTWARE_SUBDIR_OVERRIDE=${{matrix.EESSI_SOFTWARE_SUBDIR_OVERRIDE}}
               source /cvmfs/software.eessi.io/versions/${{matrix.EESSI_VERSION}}/init/bash
+              # create and use virtual environment in which keyrings.alt is installed,
+              # so we can inject GitHub token for EasyBuild
+              python3 -m venv --system-site-packages eb_venv
+              source eb_venv/bin/activate
+              pip install keyrings.alt
+              python3 -c "import keyring; keyring.set_password('github_token', '${EASYBUILD_GITHUB_USER}', '${{secrets.GITHUB_TOKEN}}')" && echo "GitHub token installed!"
               # set $EESSI_CPU_FAMILY to the CPU architecture that corresponds to $EESSI_SOFTWARE_SUBDIR_OVERRIDE (part before the first slash),
               # to prevent issues with checks in the Easybuild configuration that use this variable
               export EESSI_CPU_FAMILY=${EESSI_SOFTWARE_SUBDIR_OVERRIDE%%/*}
               module load EasyBuild
               which eb
               eb --version
+              eb --show-system-info
+              eb --check-github
               export EESSI_PREFIX=/cvmfs/software.eessi.io/versions/${{matrix.EESSI_VERSION}}
               export EESSI_OS_TYPE=linux
               env | grep ^EESSI | sort
@@ -53,15 +64,20 @@ jobs:
               done
 
         - name: Test check_missing_installations.sh with missing package (GCC/8.3.0)
+          env:
+            EASYBUILD_GITHUB_USER: 'ci'
+            PYTHON_KEYRING_BACKEND: 'keyrings.alt.file.PlaintextKeyring'
           run: |
               export EESSI_SOFTWARE_SUBDIR_OVERRIDE=${{matrix.EESSI_SOFTWARE_SUBDIR_OVERRIDE}}
               source /cvmfs/software.eessi.io/versions/${{matrix.EESSI_VERSION}}/init/bash
+              source eb_venv/bin/activate
               # set $EESSI_CPU_FAMILY to the CPU architecture that corresponds to $EESSI_SOFTWARE_SUBDIR_OVERRIDE (part before the first slash),
               # to prevent issues with checks in the Easybuild configuration that use this variable
               export EESSI_CPU_FAMILY=${EESSI_SOFTWARE_SUBDIR_OVERRIDE%%/*}
               module load EasyBuild
               which eb
               eb --version
+              eb --check-github
               export EESSI_PREFIX=/cvmfs/software.eessi.io/versions/${{matrix.EESSI_VERSION}}
               export EESSI_OS_TYPE=linux
               env | grep ^EESSI | sort
