@@ -71,3 +71,4 @@ easyconfigs:
       options:
         # see https://github.com/easybuilders/easybuild-easyconfigs/pull/21227
         from-commit: 4c5e3455dec31e68e8383c7fd86d1f80c434676d
+  - beagle-lib-4.0.1-GCC-12.3.0-CUDA-12.1.1.eb
