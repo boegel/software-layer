@@ -1,2 +1,3 @@
 easyconfigs:
-  - buildenv-default-foss-2023b.eb 
+  - buildenv-default-foss-2023b.eb
+  - BWA-0.7.18-GCCcore-13.2.0.eb
