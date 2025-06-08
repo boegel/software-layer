@@ -28,7 +28,7 @@ for file in $(ls software-layer-scripts | egrep -v 'LICENSE|README.md|^bot'); do
 done
 
 # symlink all scripts in 'bot' subdirectory, except for bot/build.sh
-for file in $(ls software-layer-scripts/bot | grep -v 'build.sh'); do
+for file in $(ls software-layer-scripts/bot | grep -v '^build.sh'); do
     ln -s ../software-layer-scripts/bot/${file} bot/${file}
 done
 
